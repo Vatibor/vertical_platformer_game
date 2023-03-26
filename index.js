@@ -9,51 +9,50 @@ const scaledCanvas = {
 	height: canvas.height / 4
 }
 
+// We place the data in collision.js into two-dimensional arrays, resulting in a 
+// 2D array of 27 arrays with 36 elements each. Our map consists of 36 columns and 27 rows.
+const floorCollisions2D = []
+for(let i = 0; i<floorCollisions.length; i+=36){
+	floorCollisions2D.push(floorCollisions.slice(i, i+36))
+}
+// console.log(floorCollisions2D)
+
+// "We iterate through the 2D array and if the symbol === 202, then we create a new 
+// CollisionBlock object, whose position will be in one of the matrices with 27 rows 
+// and 36 columns, and its size will be 16x16 pixels."
+const collisionBlocks = []
+floorCollisions2D.forEach((row, y) => {
+	row.forEach((symbol, x) => {
+		if(symbol === 202){
+			// console.log('block here')
+			collisionBlocks.push(new CollisionBlock({
+				position: {x: x*16, y: y*16}
+			}))
+		}
+	})
+})
+
+const platformCollisions2D = []
+for(let i = 0; i<platformCollisions.length; i+=36){
+	platformCollisions2D.push(platformCollisions.slice(i, i+36))
+}
+
+const platformCollisionBlocks = []
+platformCollisions2D.forEach((row, y) => {
+	row.forEach((symbol, x) => {
+		if(symbol === 202){
+			platformCollisionBlocks.push(new CollisionBlock({
+				position: {x: x*16, y: y*16}
+			}))
+		}
+	})
+})
+
+
 const gravity = 0.5
 
 
-class Sprite {
-	constructor({position, imageSrc}) {
-		this.position = position
-		this.image = new Image()
-		this.image.src = imageSrc
-	}
 
-	draw(){
-		if (!this.image) return
-		c.drawImage(this.image, this.position.x, this.position.y)
-	}
-
-	update() {
-		this.draw()
-	}
-}
-
-class Player {
-	constructor(position){
-		this.position = position
-		this.velocity = {x:0,y:1}
-		this.height = 100
-	}
-
-	draw() {
-		c.fillStyle = 'red'
-		c.fillRect(this.position.x, this.position.y, 100, this.height)
-	}
-
-	update() {
-		this.draw()
-
-		this.position.x += this.velocity.x
-		this.position.y += this.velocity.y
-
-		
-		// If the player reaches the bottom of the canvas, the velocity value will be set to 0 (it will stop falling)
-		if (this.position.y + this.height + this.velocity.y < canvas.height)
-			this.velocity.y += gravity
-		else this.velocity.y = 0
-	}
-}
 
 const player = new Player({x:0,y:0})
 
@@ -77,7 +76,17 @@ function animate() {
 	c.scale(4,4)
 	c.translate(0,-background.image.height + scaledCanvas.height)
 	background.update()
+	// drawing the collision blocks
+	collisionBlocks.forEach(collisionBlock => {
+		collisionBlock.update()
+	})
+
+	platformCollisionBlocks.forEach(block => {
+		block.update()
+	})
 	c.restore()
+
+	
 
 	player.update()
 
