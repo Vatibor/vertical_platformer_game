@@ -54,7 +54,13 @@ const gravity = 0.5
 
 
 
-const player = new Player({x:0,y:0})
+const player = new Player({
+	position:{
+		x:100,
+		y:0
+	},
+	collisionBlocks,
+})
 
 const keys = {
 	d: { pressed: false },
@@ -84,18 +90,14 @@ function animate() {
 	platformCollisionBlocks.forEach(block => {
 		block.update()
 	})
-	c.restore()
-
-	
 
 	player.update()
-
 
 	// check which key is being pressed
 	player.velocity.x = 0
 	if(keys.d.pressed) player.velocity.x = 5
 	else if(keys.a.pressed) player.velocity.x = -5
-	
+	c.restore()
 	
 }
 
@@ -111,7 +113,7 @@ window.addEventListener('keydown', (event) => {
 			keys.a.pressed = true
 			break
 		case 'w':
-			player.velocity.y = -15
+			player.velocity.y = -8
 			break
 	}
 })
