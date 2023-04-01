@@ -42,14 +42,15 @@ platformCollisions2D.forEach((row, y) => {
 	row.forEach((symbol, x) => {
 		if(symbol === 202){
 			platformCollisionBlocks.push(new CollisionBlock({
-				position: {x: x*16, y: y*16}
+				position: {x: x*16, y: y*16},
+				height: 4
 			}))
 		}
 	})
 })
 
 
-const gravity = 0.5
+const gravity = 0.1
 
 
 
@@ -60,6 +61,7 @@ const player = new Player({
 		y:300
 	},
 	collisionBlocks,
+	platformCollisionBlocks,
 	imageSrc: './img/warrior/Idle.png',
 	frameRate: 8,
 	animations: {
@@ -116,7 +118,7 @@ const background = new Sprite({
 	imageSrc: './img/background.png',
 })
 
-let y = 100
+// let y = 100
 function animate() {
 	window.requestAnimationFrame(animate)
 	c.fillStyle = 'white'
@@ -155,7 +157,7 @@ function animate() {
 		else player.switchSprite('IdleLeft')
 	}
 
-	// y axis is less than zero -> we are going upwards
+	// y-axis is less than zero -> we are going upwards
 	if(player.velocity.y < 0) {
 		if(player.lastDirection === 'right') player.switchSprite('Jump')
 		else player.switchSprite('JumpLeft')
@@ -179,7 +181,7 @@ window.addEventListener('keydown', (event) => {
 			keys.a.pressed = true
 			break
 		case 'w':
-			player.velocity.y = -8
+			player.velocity.y = -4
 			break
 	}
 })

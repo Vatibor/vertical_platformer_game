@@ -1,9 +1,9 @@
 class CollisionBlock {
-	constructor({position, imageSrc}) {
+	constructor({position, height = 16}) {
 		this.position = position
         // every collision tile is 16px width and height
         this.width = 16
-        this.height = 16
+        this.height = height
 	}
 
 	draw(){
